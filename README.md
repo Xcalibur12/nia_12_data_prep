@@ -1,6 +1,6 @@
 # nia_12_data_prep
 
-`git clone `
+`git clone https://github.com/Xcalibur12/nia_12_data_prep.git`
 
 ## Prerequisite
 1. `pip install wget`
