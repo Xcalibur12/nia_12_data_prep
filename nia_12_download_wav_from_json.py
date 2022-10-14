@@ -38,6 +38,10 @@ def make_dataset(input_json, lang_data_dir):
 
         download_wav(audio_url, lang_data_dir)
         save_text(text_name, text, lang_data_dir)
-        
-lang_data_dir = mkdir_lang_folder(lang_name)
-make_dataset(input_json, lang_data_dir)
+    
+def main():
+    lang_data_dir = mkdir_lang_folder(lang_name)
+    make_dataset(input_json, lang_data_dir)
+
+if __name__ == '__main__':
+    main()
