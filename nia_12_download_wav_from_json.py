@@ -12,7 +12,7 @@ lang_name = input_json.rsplit('.',1)[0]
 
 def mkdir_lang_folder(lang_name):
     lang_data_dir = "{}_data".format(lang_name)
-    if not os.path.exists(lang_name):
+    if not os.path.exists(lang_data_dir):
         os.mkdir(lang_data_dir)
     return lang_data_dir
 
@@ -27,18 +27,23 @@ def save_text(text_name, text, out_path):
 def make_dataset(input_json, lang_data_dir):
     j_open = codecs.open(input_json, 'r', encoding='utf-8').readlines()[0][1:-1]
     data_chunks = j_open.split("},{")
-    for chunk in data_chunks:
+    chunk_len = len(data_chunks)
+    print("Number of Samples for {}: {}\n\n".format(lang_name.upper(), chunk_len))
+    for i in range(chunk_len):
+        chunk = data_chunks[i]
         info_list = chunk.split(',')
         for info in info_list:
             if 'audioUrl' in info:
                 audio_url = info.split('":"')[-1][:-1]
             if 'sentence' in info:
                 text = info.split('":')[-1].split('"')[1].strip()
-        text_name = audio_url.split('/')[-1].split('.')[0] + '.txt'
+        txt_name = audio_url.split('/')[-1].rsplit('.',1)[0] + '.txt'
 
-        download_wav(audio_url, lang_data_dir)
-        save_text(text_name, text, lang_data_dir)
-    
+        if not os.path.exists(os.path.join(lang_data_dir, txt_name)):
+            if audio_url.startswith('http'):
+                download_wav(audio_url, lang_data_dir)
+                save_text(txt_name, text, lang_data_dir)
+
 def main():
     lang_data_dir = mkdir_lang_folder(lang_name)
     make_dataset(input_json, lang_data_dir)
